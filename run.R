@@ -1,37 +1,24 @@
-MyCode <- function(X) {
-  ...
-  return(Y)
-}
- 
-source(”MyAlgorithm.R”)
- 
-nmax = 100
-delta = 0.1
-epsilon = 0.01
-...
- 
-init()
- 
-X0 = initDesign(d)
+MyCode = function(X) { ... return(Y) }
+source("MyAlgorithm.R")
+
+options = list(nmax = 100, delta = 0.1, epsilon = 0.01, ...)
+algorithm = MyAlgorithm(options)
+
+X0 = getInitialDesign(algorithm, ...)
 Y0 = MyCode(X0)
- 
 Xi = X0
 Yi = Y0
- 
+
 finished = FALSE
 while (!finished) {
- 
-  Xj = nextDesign(Xi,Yi)
-  if (length(xnext) == 0) {
+  Xj = getNextDesign(algorithm,Xi,Yi)
+  if (is.null(Xj) | length(Xj) == 0) {
     finished = TRUE
-    break
+  } else {
+    Yj = MyCode(Xj)
+    Xi = rbind(Xi,Xj)
+    Yi = rbind(Yi,Yj)
   }
-  Yj = MyCode(Xj)
- 
-  # print(analyseDesign(Xj,Yj))
- 
-  Xi = rbind(Xi,Xj)
-  Yi = rbind(Yi,Yj)
 }
- 
-print(analyseDesign(Xi,Yj))
+
+print(displayResults(algorithm,Xi,Yi))
